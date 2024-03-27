@@ -69,3 +69,37 @@ GROUP BY status_id
 -- Отримати завдання, які призначені користувачам 
 -- з певною доменною частиною електронної пошти.
 
+SELECT t.id, t.title, t.description, t.status_id, u.fullname, u.email 
+FROM tasks AS t
+INNER JOIN users AS u
+ON t.user_id = u.id 
+WHERE u.email LIKE '%@example.com';
+
+
+-- Отримати список завдань, що не мають опису
+SELECT * 
+FROM tasks
+WHERE description IS NULL
+OR description = '';
+
+
+-- Вибрати користувачів та їхні завдання, які є у статусі 'in progress'
+SELECT u.fullname, t.title, t.status_id 
+FROM users AS u
+INNER JOIN tasks AS t
+ON u.id = t.user_id 
+WHERE t.status_id = 2;
+
+-- Другий варіант
+SELECT u.fullname, t.title, t.user_id, s.name
+FROM users AS u
+INNER JOIN tasks AS t ON t.user_id = u.id 
+INNER JOIN status AS s ON s.id = t.status_id
+WHERE s.name = 'in progress';
+
+-- Отримати користувачів та кількість їхніх завдань.
+SELECT u.fullname, COUNT(t.title)  
+FROM users AS u
+LEFT JOIN tasks AS t
+ON u.id = t.user_id 
+GROUP BY u.id;
